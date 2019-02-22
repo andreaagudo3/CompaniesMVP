@@ -14,30 +14,55 @@ final class CompaniesListVC: UIViewController {
 
     private let companiesPresenter = CompaniesPresenter(companiesService: CompaniesService())
 
+    private var lastResults: CompaniesResponse?
     private var results: CompaniesResponse? {
         didSet {
             DispatchQueue.main.async {
-                self.companiesTableView.reloadData()
-            }
+                guard let lastResults = self.lastResults else {
+                    self.companiesTableView.reloadData()
+                    return
+                }
 
+                 guard let results = self.results else {
+                    return
+                }
+
+                self.companiesTableView.insertAndDeleteCellsForObjects(objects: results.companies, originalObjects: lastResults.companies)
+                self.lastResults = self.results
+
+            }
         }
     }
+
+    var timer = Timer()
+    var secondsToReload = 20.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setTable()
         configureView()
-        companiesPresenter.getCompanies()
+        callCompanies()
+        setTimer()
     }
 
     private func configureView() {
         companiesPresenter.attachView(self)
+        title = "Companies"
     }
 
     private func setTable() {
         companiesTableView.delegate = self
         companiesTableView.dataSource = self
         companiesTableView.tableFooterView = UIView()
+    }
+
+    private func setTimer() {
+        self.timer = Timer(timeInterval: secondsToReload, target: self, selector: #selector(callCompanies), userInfo: nil, repeats: true)
+        RunLoop.main.add(self.timer, forMode: RunLoop.Mode.default)
+    }
+
+    @objc private func callCompanies() {
+          companiesPresenter.getCompanies()
     }
 
     private func handleError(_ error: WebError<CustomError>) {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Company: Decodable {
+struct Company: Decodable, Equatable {
     var id: Int?
     var name: String?
     var sharePrice: Float?
@@ -35,7 +35,11 @@ struct Company: Decodable {
     }
 }
 
-struct CompaniesResponse: Decodable {
+struct CompaniesResponse: Decodable, Equatable {
+    static func == (lhs: CompaniesResponse, rhs: CompaniesResponse) -> Bool {
+        return lhs.companies == rhs.companies
+    }
+
     var companies: [Company]
 
     init(from decoder: Decoder) throws {

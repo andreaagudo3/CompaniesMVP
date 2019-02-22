@@ -9,12 +9,11 @@
 import UIKit
 
 extension UIView {
-    func setCustomizedShadow() {
-        layer.masksToBounds = false
-        layer.shadowRadius = 4
-        layer.shadowOpacity = 1
-        layer.shadowColor = UIColor.gray.cgColor
-        layer.shadowOffset = CGSize(width: 0, height: 2)
-        layer.cornerRadius = 10
+    func setCustomizedShadow(opacity: Float = 0.2, shadowRadius: CGFloat = 2, cornerRadius: CGFloat = 10) {
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowOpacity = opacity
+        self.layer.shadowRadius = shadowRadius
+        self.layer.shadowOffset = CGSize.zero
+        self.layer.cornerRadius = cornerRadius
     }
 }
