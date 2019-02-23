@@ -13,9 +13,10 @@ struct Company: Decodable, Equatable {
     var name: String?
     var sharePrice: Float?
     var description: String?
+    var country: String?
 
     enum CodingKeys: String, CodingKey {
-        case id, name, sharePrice, description
+        case id, name, sharePrice, description, country
     }
 
     init(from decoder: Decoder) throws {
@@ -24,6 +25,7 @@ struct Company: Decodable, Equatable {
         name = try values.decodeIfPresent(String.self, forKey: CodingKeys.name)
         sharePrice = try values.decodeIfPresent(Float.self, forKey: CodingKeys.sharePrice)
         description = try values.decodeIfPresent(String.self, forKey: CodingKeys.description)
+        country = try values.decodeIfPresent(String.self, forKey: CodingKeys.country)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -32,6 +34,7 @@ struct Company: Decodable, Equatable {
         try container.encodeIfPresent(name, forKey: .name)
         try container.encodeIfPresent(sharePrice, forKey: .sharePrice)
         try container.encodeIfPresent(description, forKey: .description)
+        try container.encodeIfPresent(country, forKey: .country)
     }
 }
 
