@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  Companies
+
+  Created by Andrea Agudo on 23/02/2019.
+  Copyright © 2019 aagudo. All rights reserved.
+*/
+
+/* COMPANY DETAIL */
+"description" = "Description:";
+"country" = "Country:";

@@ -15,6 +15,8 @@ final class CompanyDetailVC: UIViewController {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var countryLabel: UILabel!
     @IBOutlet weak var customizedView: UIView!
+    @IBOutlet weak var descriptionTitleLabel: UILabel!
+    @IBOutlet weak var countryTitleLabel: UILabel!
 
     private let companyDetailPresenter = CompanyDetailPresenter(companiesService: CompaniesService())
 
@@ -38,6 +40,7 @@ final class CompanyDetailVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
+        setLocale()
         setTimer()
     }
 
@@ -50,6 +53,11 @@ final class CompanyDetailVC: UIViewController {
         title = companyToSearch?.name
         companyDetailPresenter.attachView(self)
         customizedView.setCustomizedShadow()
+    }
+
+    private func setLocale() {
+        descriptionTitleLabel.text = localized("description")
+        countryTitleLabel.text = localized("country")
     }
 
     // MARK: Timer
@@ -67,7 +75,7 @@ final class CompanyDetailVC: UIViewController {
         guard let companyDetail = companyDetail else { return }
         nameLabel.text = companyDetail.name
         if let price = companyDetail.sharePrice {
-            priceLabel.text = price.description + " €"
+            priceLabel.text = "$ " + price.description
         }
         descriptionLabel.text = companyDetail.description
         countryLabel.text = companyDetail.country

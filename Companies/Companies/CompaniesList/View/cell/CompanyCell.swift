@@ -38,7 +38,7 @@ final class CompanyCell: UITableViewCell {
             titleLabel.text = name
         }
         if let price = company.sharePrice {
-            priceLabel.text = price.description + " €"
+            priceLabel.text = "$ " + price.description
         }
     }
 

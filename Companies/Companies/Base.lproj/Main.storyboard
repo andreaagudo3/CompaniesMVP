@@ -174,8 +174,10 @@
                     </view>
                     <connections>
                         <outlet property="countryLabel" destination="clH-Q8-YUm" id="KGA-5N-1OD"/>
+                        <outlet property="countryTitleLabel" destination="jbw-MX-a3A" id="o1f-he-xuX"/>
                         <outlet property="customizedView" destination="EGy-6u-KvP" id="3Si-p3-1LP"/>
-                        <outlet property="descriptionLabel" destination="EQN-eG-zTs" id="1zW-Vk-VVh"/>
+                        <outlet property="descriptionLabel" destination="EQN-eG-zTs" id="c0U-tM-UwX"/>
+                        <outlet property="descriptionTitleLabel" destination="HaD-vQ-i5f" id="H3o-DI-kat"/>
                         <outlet property="nameLabel" destination="c84-Ex-6Hv" id="MqC-X7-5zh"/>
                         <outlet property="priceLabel" destination="3RS-pw-KeQ" id="X2f-sP-lzU"/>
                     </connections>
