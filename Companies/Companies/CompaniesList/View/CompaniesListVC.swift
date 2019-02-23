@@ -14,34 +14,44 @@ final class CompaniesListVC: UIViewController {
 
     private let companiesPresenter = CompaniesPresenter(companiesService: CompaniesService())
 
-    private var lastResults: CompaniesResponse?
-    private var results: CompaniesResponse? {
+    private var lastResults: [Company]?
+    private var results: [Company]? {
         didSet {
             DispatchQueue.main.async {
-                guard let lastResults = self.lastResults else {
+                if let lastResults = self.lastResults {
+                    guard let results = self.results else {
+                        return
+                    }
+                    self.companiesTableView.insertAndDeleteCellsForObjects(objects: results, originalObjects: lastResults)
+                    self.lastResults = self.results
+                    return
+                } else {
+                    self.lastResults = self.results
                     self.companiesTableView.reloadData()
-                    return
                 }
-
-                 guard let results = self.results else {
-                    return
-                }
-
-                self.companiesTableView.insertAndDeleteCellsForObjects(objects: results.companies, originalObjects: lastResults.companies)
-                self.lastResults = self.results
-
             }
         }
     }
 
-    var timer = Timer()
+    var timer: Timer?
     var secondsToReload = 20.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setTable()
         configureView()
-        callCompanies()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if timer != nil {
+            timer!.invalidate()
+            timer = nil
+        }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         setTimer()
     }
 
@@ -69,7 +79,10 @@ final class CompaniesListVC: UIViewController {
     // MARK: Timer
     private func setTimer() {
         self.timer = Timer(timeInterval: secondsToReload, target: self, selector: #selector(callCompanies), userInfo: nil, repeats: true)
-        RunLoop.main.add(self.timer, forMode: RunLoop.Mode.default)
+        if let timer = self.timer {
+            RunLoop.main.add(timer, forMode: RunLoop.Mode.default)
+        }
+        timer?.fire()
     }
 
     // MARK: getCompanies
@@ -107,7 +120,7 @@ extension CompaniesListVC: UITableViewDelegate, UITableViewDataSource {
         guard let results = self.results else {
             return 0
         }
-        return results.companies.count
+        return results.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -117,7 +130,7 @@ extension CompaniesListVC: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
 
-        let company = results.companies[indexPath.row]
+        let company = results[indexPath.row]
         cell.company = company
 
         return cell
@@ -125,7 +138,7 @@ extension CompaniesListVC: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let  results = self.results else { return }
-        let selected = results.companies[indexPath.row]
+        let selected = results[indexPath.row]
         goToDetail(with: selected)
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -145,7 +158,7 @@ extension CompaniesListVC: CompaniesListView {
 
     }
 
-    func setData(_ data: CompaniesResponse) {
+    func setData(_ data: [Company]) {
         self.results = data
     }
 

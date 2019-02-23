@@ -33,9 +33,9 @@ extension UITableView {
 
         if insertions.count > 0 || deletions.count > 0 ||  noops.count > 0 {
             beginUpdates()
-            insertRows(at: insertions, with: .automatic)
-            deleteRows(at: deletions, with: .automatic)
-            reloadRows(at: noops, with: .automatic)
+            insertRows(at: insertions, with: .fade)
+            deleteRows(at: deletions, with: .fade)
+            reloadRows(at: noops, with: .fade)
             endUpdates()
         }
     }

@@ -8,7 +8,7 @@
 
 protocol CompaniesListView {
     func companiesDataReceived()
-    func setData(_ data: CompaniesResponse)
+    func setData(_ data: [Company])
     func error(err: WebError<CustomError>)
 }
 
@@ -33,7 +33,8 @@ class CompaniesPresenter {
         companiesService.getCompanies { (response) in
             switch response {
             case .success(let data):
-                self.companiesView?.setData(data)
+                let sorted = data.companies.sorted(by: { $1.sharePrice!.isLess(than: $0.sharePrice!) })
+                self.companiesView?.setData(sorted)
             case .failure(let error):
                 self.companiesView?.error(err: error)
             }
