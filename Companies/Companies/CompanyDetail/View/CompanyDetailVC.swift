@@ -31,9 +31,18 @@ final class CompanyDetailVC: UIViewController {
         }
     }
 
+    var timer = Timer()
+    var secondsToReload = 5.0
+
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
+        setTimer()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        timer.invalidate()
     }
 
     private func initView() {
@@ -41,7 +50,13 @@ final class CompanyDetailVC: UIViewController {
         companyDetailPresenter.attachView(self)
     }
 
-    private func getDetail() {
+    // MARK: Timer
+    private func setTimer() {
+        self.timer = Timer(timeInterval: secondsToReload, target: self, selector: #selector(getDetail), userInfo: nil, repeats: true)
+        RunLoop.main.add(self.timer, forMode: RunLoop.Mode.default)
+    }
+
+    @objc private func getDetail() {
         guard let companyToSearch = companyToSearch, let id = companyToSearch.id else { return }
         companyDetailPresenter.getCompanyDetail(id: id)
     }
