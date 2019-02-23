@@ -35,15 +35,14 @@ class CompaniesService: CompaniesServiceProtocol {
         }
     }
 
-//    internal func getCompanyDetail(id: Int, companiesRequest: GetCompanyDetailRequest, completion: @escaping ResultCallback<Company>) {
-//        apiClient.perform(request: companiesRequest) { (transaction) in
-//            switch transaction {
-//            case .success(let data):
-//                completion(Result.success(data))
-//            case .failure(let error):
-//                Log.debug(error.localizedDescription)
-//                completion(Result.failure(ResultError.global))
-//            }
-//        }
-//    }
+    internal func getCompanyDetail(id: Int, completion: @escaping (Result<Company, CustomError>) -> Void) {
+        let companyDetailResource = Resource<Company, CustomError>(jsonDecoder: JSONDecoder(), path: id.description)
+        sharedWebClient.load(resource: companyDetailResource) { response in
+            if let companies = response.value {
+                completion(Result.success(companies))
+            } else if let error = response.error {
+                completion(Result.failure(error))
+            }
+        }
+    }
 }

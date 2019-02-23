@@ -50,21 +50,34 @@ final class CompaniesListVC: UIViewController {
         title = "Companies"
     }
 
+    // MARK: Segue
+    private func goToDetail(with company: Company) {
+        let storyboard = Storyboard.main
+        if let controller = storyboard.instantiateViewController(withIdentifier: CompanyDetailVC.cvIdentifier) as? CompanyDetailVC {
+            controller.companyToSearch = company
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
+    }
+
+    // MARK: TableView
     private func setTable() {
         companiesTableView.delegate = self
         companiesTableView.dataSource = self
         companiesTableView.tableFooterView = UIView()
     }
 
+    // MARK: Timer
     private func setTimer() {
         self.timer = Timer(timeInterval: secondsToReload, target: self, selector: #selector(callCompanies), userInfo: nil, repeats: true)
         RunLoop.main.add(self.timer, forMode: RunLoop.Mode.default)
     }
 
+    // MARK: getCompanies
     @objc private func callCompanies() {
           companiesPresenter.getCompanies()
     }
 
+    // MARK: Errors
     private func handleError(_ error: WebError<CustomError>) {
         switch error {
         case .noInternetConnection:
@@ -108,6 +121,13 @@ extension CompaniesListVC: UITableViewDelegate, UITableViewDataSource {
         cell.company = company
 
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let  results = self.results else { return }
+        let selected = results.companies[indexPath.row]
+        goToDetail(with: selected)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
