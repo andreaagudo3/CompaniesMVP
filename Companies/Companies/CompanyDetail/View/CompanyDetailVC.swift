@@ -14,6 +14,7 @@ final class CompanyDetailVC: UIViewController {
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var countryLabel: UILabel!
+    @IBOutlet weak var customizedView: UIView!
 
     private let companyDetailPresenter = CompanyDetailPresenter(companiesService: CompaniesService())
 
@@ -32,7 +33,7 @@ final class CompanyDetailVC: UIViewController {
     }
 
     var timer = Timer()
-    var secondsToReload = 5.0
+    var secondsToReload = 20.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,6 +49,7 @@ final class CompanyDetailVC: UIViewController {
     private func initView() {
         title = companyToSearch?.name
         companyDetailPresenter.attachView(self)
+        customizedView.setCustomizedShadow()
     }
 
     // MARK: Timer
