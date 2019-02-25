@@ -161,6 +161,4 @@ extension CompaniesListVC: CompaniesListView {
     func setData(_ data: [Company]) {
         self.results = data
     }
-
-    func getCompanies() {}
 }
