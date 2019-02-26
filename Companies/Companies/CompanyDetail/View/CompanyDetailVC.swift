@@ -44,6 +44,10 @@ final class CompanyDetailVC: UIViewController {
         setTimer()
     }
 
+    deinit {
+        print("CompanyDetailVC was de-initialized")
+    }
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         timer.invalidate()
