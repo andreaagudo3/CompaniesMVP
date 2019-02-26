@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol CompanyDetailView {
+protocol CompanyDetailView: AnyObject {
     func companiesDataReceived()
     func setData(_ data: Company)
     func error(err: WebError<CustomError>)
@@ -17,7 +17,7 @@ protocol CompanyDetailView {
 class CompanyDetailPresenter {
 
     let companiesService: CompaniesService
-    var companyDetailView: CompanyDetailView?
+    weak var companyDetailView: CompanyDetailView?
 
     init(companiesService: CompaniesService) {
         self.companiesService = companiesService

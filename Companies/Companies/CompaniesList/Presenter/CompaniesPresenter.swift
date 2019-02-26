@@ -6,7 +6,7 @@
 //  Copyright © 2019 aagudo. All rights reserved.
 //
 
-protocol CompaniesListView {
+protocol CompaniesListView: AnyObject {
     func companiesDataReceived()
     func setData(_ data: [Company])
     func error(err: WebError<CustomError>)
@@ -15,7 +15,7 @@ protocol CompaniesListView {
 class CompaniesPresenter {
 
      let companiesService: CompaniesService
-     var companiesView: CompaniesListView?
+     weak var companiesView: CompaniesListView?
 
     init(companiesService: CompaniesService) {
         self.companiesService = companiesService

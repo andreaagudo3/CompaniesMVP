@@ -19,15 +19,15 @@ extension Result {
             self = .failure(error)
             return
         }
-        
+
         self = .success(value)
     }
-    
+
     var value: A? {
         guard case let .success(value) = self else { return nil }
         return value
     }
-    
+
     var error: WebError<CustomError>? {
         guard case let .failure(error) = self else { return nil }
         return error
