@@ -15,14 +15,14 @@ public struct Resource<A, CustomError> {
     var params: JSON
     let parse: (Data) -> A?
     let parseError: (Data) -> CustomError?
-    
+
     init(path: String,
          method: RequestMethod = .get,
          params: JSON = [:],
          headers: HTTPHeaders = [:],
          parse: @escaping (Data) -> A?,
          parseError: @escaping (Data) -> CustomError?) {
-        
+
         self.path = Path(path)
         self.method = method
         self.params = params
@@ -38,11 +38,11 @@ extension Resource where A: Decodable, CustomError: Decodable {
          method: RequestMethod = .get,
          params: JSON = [:],
          headers: HTTPHeaders = [:]) {
-        
+
         var newHeaders = headers
         newHeaders["Accept"] = "application/json"
         newHeaders["Content-Type"] = "application/json"
-        
+
         self.path = Path(path)
         self.method = method
         self.params = params

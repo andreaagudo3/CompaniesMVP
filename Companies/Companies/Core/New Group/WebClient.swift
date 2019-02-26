@@ -6,7 +6,6 @@
 //  Copyright © 2019 aagudo. All rights reserved.
 //
 
-
 import Foundation
 
 public typealias JSON = [String: Any]
@@ -23,10 +22,10 @@ extension URL {
     init<A, E>(baseUrl: String, resource: Resource<A, E>) {
         var components = URLComponents(string: baseUrl)!
         let resourceComponents = URLComponents(string: resource.path.absolutePath)!
-        
+
         components.path = Path(components.path).appending(path: Path(resourceComponents.path)).absolutePath
         components.queryItems = resourceComponents.queryItems
-        
+
         switch resource.method {
         case .get, .delete:
             var queryItems = components.queryItems ?? []
@@ -37,7 +36,7 @@ extension URL {
         default:
             break
         }
-        
+
         self = components.url!
     }
 }
@@ -47,7 +46,7 @@ extension URLRequest {
         let url = URL(baseUrl: baseUrl, resource: resource)
         self.init(url: url)
         httpMethod = resource.method.rawValue
-        resource.headers.forEach{
+        resource.headers.forEach {
             setValue($0.value, forHTTPHeaderField: $0.key)
         }
         switch resource.method {
@@ -65,39 +64,39 @@ extension URLRequest {
 
 open class WebClient {
     private var baseUrl: String
-    
+
     public var commonParams: JSON = [:]
-    
+
     public init(baseUrl: String) {
         self.baseUrl = baseUrl
     }
-    
+
     public func load<A, CustomError>(resource: Resource<A, CustomError>,
-                                     completion: @escaping (Result<A, CustomError>) ->()) -> URLSessionDataTask? {
-        
+                                     completion: @escaping (Result<A, CustomError>) -> Void) -> URLSessionDataTask? {
+
         if !Reachability.isConnectedToNetwork() {
             completion(.failure(.noInternetConnection))
             return nil
         }
-        
+
         var newResouce = resource
-        newResouce.params = newResouce.params.merging(commonParams) { spec, common in
+        newResouce.params = newResouce.params.merging(commonParams) { spec, _ in
             return spec
         }
-        
+
         let request = URLRequest(baseUrl: baseUrl, resource: newResouce)
-        
+
         let task = URLSession.shared.dataTask(with: request) { data, response, _ in
             // Parsing incoming data
             guard let response = response as? HTTPURLResponse else {
                 completion(.failure(.other))
                 return
             }
-            
+
             if let data = data, let outputStr = String(data: data, encoding: String.Encoding.utf8) {
                 print("*[REST RESPONSE]*:\n " + outputStr)
             }
-            
+
             if (200..<300) ~= response.statusCode {
                 completion(Result(value: data.flatMap(resource.parse), or: .other))
             } else if response.statusCode == 401 {
@@ -106,11 +105,10 @@ open class WebClient {
                 completion(.failure(data.flatMap(resource.parseError).map({.custom($0)}) ?? .other))
             }
         }
-        
+
         task.resume()
-        
+
         return task
-        
+
     }
 }
-

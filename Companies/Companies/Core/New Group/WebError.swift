@@ -14,4 +14,3 @@ public enum WebError<CustomError>: Error {
     case unauthorized
     case other
 }
-
